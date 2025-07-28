@@ -1,0 +1,40 @@
+from pathlib import Path
+import os
+
+import click
+import requests
+
+api_key_file = Path.home() / '.config' / 'myapp' / 'supersecret.txt'
+
+@click.command()
+@click.argument('message')
+def cmd_api_client(message):
+    if not api_key_file.exists():
+        api_key_file.parent.mkdir(parents=True, exist_ok=True)
+
+        username = click.prompt('Username')
+        password = click.prompt('Password', hide_input=True)
+
+        r = requests.post('https://127.0.1.1:5000/api/key', json={'username':username, 'password':password})
+
+        if r.status_code != 200:
+            click.echo('Invalid authentication or other error ocurred. Status code: {}'.format(r.status_code))
+            return False
+
+
+        api_key = r.json()['key']
+        print('Received key:', api_key)
+
+        with api_key_file.open('w') as outfile:
+            outfile.write(api_key)
+        
+        os.chmod(api_key_file, 0o600)
+
+    with api_key_file.open('r') as infile:
+        api_key = infile.read()
+    r = requests.post('https://127.0.1.1:5000/api/post', json={'text':message}, headers={'X-APIKEY': api_key})
+    print(r.text)
+
+
+if __name__ == '__main__':
+    cmd_api_client()
